@@ -18,6 +18,11 @@ The words come later: the forecast (§2) speaks near the anticipated window. The
 visual sows the seed; the forecast tends it. The person learns the link by seeing
 the seed appear every time they push hard, not by being told.
 
+03 §4 gives the seed its mechanism: a hard workout raises the *reward pull* the same
+day ("I earned it"), even while physical hunger is briefly suppressed. The silence
+at the win also fits 03 §8: framing a run as work that earns something is what
+raises that pull.
+
 ## 2. The forecast lives on the layer's rim
 
 *Decision. Refines 00 §2.2 (semicircular weather-style forecast).*
@@ -130,9 +135,10 @@ as data-only manifests rendered by the app's own fixed renderers.
 | Technique | Kind | UI notes |
 |---|---|---|
 | 忍 calligraphy | Plugin — `writingCanvas` | Each finished character dissolves as the next one begins. |
-| Reciting statements | Plugin — `textPrompt` | User-authored; empty until the person writes their own. |
-| Photos | Plugin — `imageGallery` | Placeholder technique; the photo source is still open (00 §3.2). |
 | Naming the emotion | **Not a plugin** — a domain BA activity (02 §3.1) | Always present at a BA moment. Cannot be installed or uninstalled, so it can never be missing. |
+
+Reciting statements (`textPrompt`) and photos (`imageGallery`) were dropped from v1 on
+2026-09-25 (03 §4).
 
 Naming the emotion was drafted as a plugin because the idea arrived from
 `bebekim/empatheating`. It is not one: 00 §2.6 lists `:name-emotion` as a BA
@@ -172,6 +178,9 @@ is never shown as having lost something.
 **3. Never stored, only derived.** The run is computed from the log on read
 (02 §3.4). There is no counter to reset, so there is nothing to destroy at a
 break. This is what makes mechanisms 1 and 2 enforceable rather than aspirational.
+
+The tolerance has outside support: in habit-formation research, missing a single
+opportunity did not materially set people back (Lally 2010; see 03 §5).
 
 **MA only.** Runs count MA-active days. BA activity never feeds a run, because if
 it did, *not* grounding would break one — exactly what 00 §3.3 forbids.
@@ -258,6 +267,9 @@ sized proportionally to the space available, not in absolute points, so it does
 not float in empty space on a larger screen.
 
 Open:
+- **Single tub vs. nest.** 03 §7 records a hand-sketched alternative: one tub with a
+  demand line, a capacity line, and input / capacity / output trays around it.
+  Whether it replaces this nest or becomes one layer of it is undecided.
 - **Growth.** Rate and proportions are an experiment (§3).
 - **Same mode twice.** Outer and core are the same mode (MA–BA–MA). Decide
   whether selecting the core shows the same actions as the outer, or actions
@@ -318,6 +330,9 @@ After the photo, the person looks at it and checks one of three tiers:
 | Bottom | High sugar, highly processed | — |
 
 - One tap after the photo; no portions, macros, or numbers.
+- The tiers feed the demand/capacity model in 03 §4: the bottom tier is the clearest
+  demand input, and the top tier is hypothesised to cost a little now and pay off
+  over months. No line effect is claimed for the middle tier.
 - The meal is scribbled into the MA box (§9) with its tier. Each tier has its own
   icon, so the tier is never shown by colour alone.
 
@@ -350,7 +365,11 @@ and §7's run can be swept without recompiling, and so no view hardcodes one.
 | `toleranceWindow` | 7 days | §7 | …within this rolling window. |
 | `wildfireThreshold` | — | §2 | Where `patternNoticed` stops being amber and becomes textured. |
 
-Two of these are user settings rather than experiment variables (`tallyStyle`,
+The lag tunables for the demand/capacity model (`runCapacityLag`, `girthLag` and
+the rest) are listed with their evidence anchors in 03 §9 and belong to this same
+config surface.
+
+Two of the parameters in the table are user settings rather than experiment variables (`tallyStyle`,
 `handedness`); they live in the same config type but are written by Settings, not
 by a build configuration. See 02 §3.5 for the preferences port.
 

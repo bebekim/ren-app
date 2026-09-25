@@ -5,6 +5,10 @@
 > `00_concept.md` (00 §2.6 data model, 00 §3.5 plugin model) and the UI decisions in
 > `01_main_ui.md`, for the native iOS build.
 >
+> `03_stock_flow_model.md` (the demand/capacity model, lag tunables and the v1
+> activity set) is **not yet architected here**. Its effect on this Spec is listed in
+> §7 rather than decided.
+>
 > A throwaway interaction prototype exists in `Ren/` — an in-memory `LayerNode`
 > history, circular layers, per-layer action buttons, no persistence. It predates
 > this Spec and diverges from it (circles not rounded rectangles, actions inside
@@ -138,8 +142,9 @@ public struct LoopEvent: Identifiable, Equatable {
   viewed) is not a loop event and is not stored here.
 
 `MAActivity` covers aerobic, anaerobic, exercise prep, and meal log (00 §1
-terminology). `BAActivity` covers emotion naming, context recording, and grounding
-used. Emotion naming is a domain activity, not a plugin (00 §2.6).
+terminology). `BAActivity` covers emotion naming and grounding used. Emotion naming
+is a domain activity, not a plugin (00 §2.6). Context recording was dropped as an
+activity (03 §4). Time comes from `occurredAt`, so nothing is lost.
 
 **Payloads carry what the UI derives from, and nothing pre-aggregated.** Two things
 in 01 are rendered from MA payloads, so the payloads must hold their inputs:
@@ -381,7 +386,9 @@ same reason, and because both read the same log through the same shape of query.
   SwiftData sits behind `LoopEventRepository`, revisiting the persistence choice
   later stays cheap.
 - **When a layer starts.** Does every MA event sow a new BA layer, or only some
-  (e.g. a workout but not a meal log)? This decides when `sowedBy` is set.
+  (e.g. a workout but not a meal log)? This decides when `sowedBy` is set. 03 §4
+  suggests an answer: the events that raise demand (hard workouts, the
+  ultra-processed meal tier) sow; the ones that lower it (the walk) may not.
 - **Where user-authored content lives.** Quotes and photo references could live in
   the plugin manifest (per install) or in a separate user-content store shared
   across plugins. The second makes invariant 4 simpler.
@@ -394,6 +401,22 @@ same reason, and because both read the same log through the same shape of query.
   outgrow the space — smaller writing, a summary line, or tap to open. §8 makes
   this pressing rather than theoretical: it is reached on the device floor at large
   type sizes, not only in edge cases.
+- **Renderers for dropped techniques.** Reciting and photos were dropped from v1
+  (03 §4), leaving 忍 as the only built-in plugin. `textPrompt` and `imageGallery`
+  (§3.3) and the phase 2 plan (§6) still assume three. Either keep them for future
+  catalog entries, or cut them and add them back when a technique needs them. The
+  two questions above about user-authored content and photo storage only matter if
+  they are kept. The code still ships both: `grounding-catalog.json` has
+  `recite-verse` and `photo-recall`, and `PlaceholderActions.swift` has a Recite
+  action.
+- **What 03 adds to the domain.** None of this is architected yet:
+  - **Sleep** (03 §4's capacity tray) is neither MA nor BA, so it has no event kind.
+  - **Waist girth** measurements (03 §2) need an event kind of their own.
+  - **HealthKit.** 03 assumes runs and sleep arrive from HealthKit. That is a new
+    read-only data source, a permission prompt, and a port. It is absent from §1's
+    scope.
+  - **The lines and lags** (03 §3, §5) would be derived from the log, like the run
+    and the forecast. The lag tunables (03 §9) join `tunables.json`.
 - **Same mode twice.** 01 §8: outer and core are the same mode (MA–BA–MA). Whether
   selecting the core offers the same actions as the outer or "next time" actions
   changes what `GetGroundingOffer` and the MA action source are asked for.

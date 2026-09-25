@@ -6,8 +6,9 @@
 > codebase, because that is where the session happened to be running).
 >
 > This doc is doc `00` in this repo's numbered `Specs/`. `01_main_ui.md` carries the
-> UI decisions and `02_architecture.md` is the v1 Spec written against this doc.
-> Several sections below have since been refined or superseded by those two; each
+> UI decisions, `02_architecture.md` is the v1 Spec written against this doc, and
+> `03_stock_flow_model.md` carries the demand/capacity model and the v1 activity set.
+> Several sections below have since been refined or superseded by those three; each
 > says so inline. Where they disagree with this doc, **the later-numbered doc
 > wins** and this one should be corrected to match.
 
@@ -30,8 +31,10 @@ once, not one:
 
 Calorie counters and most fitness apps instrument only the first of these (what was
 eaten, what was burned). None of them connect a person's own intervention — a workout,
-a restriction — to the compensating response it produces in the hours that follow, at
-the moment that connection would actually be useful.
+a restriction — to the compensating response it produces, at the moment that
+connection would actually be useful. That response runs on more than one clock: a
+reward pull the same day, and hunger compensation that can build over weeks
+(03 §4).
 
 ### Guiding principle
 
@@ -52,8 +55,12 @@ Shorthand used throughout the rest of this doc and the design canvas:
   exercise preparation (for example, setting out shoes or changing into gym shorts).
   Maps to "Energy regulation" above.
 - **BA (brain addiction)** — the craving-response set: naming the emotion/urge,
-  and the grounding toolkit in section 3 (calligraphy, self-affirming statements,
-  photos of loved ones). Maps to "Learned reward and relief" above.
+  and the grounding toolkit in section 3 (忍 calligraphy in v1). Maps to "Learned
+  reward and relief" above.
+
+The v1 activity set, and each activity's hypothesised effect on demand and capacity,
+is decided in `03_stock_flow_model.md` §4. That list supersedes the activity lists in
+this doc.
 
 In the recursive-growth interface test (design canvas), MA and BA are **interwoven,
 not permanently ranked**: an MA action (a workout or logged meal) may sow a BA craving
@@ -95,15 +102,14 @@ observed pattern behind it.
 - **MA forecast — low energy / exercise friction.** For example: “Yellow watch: low
   energy has preceded skipped movement on 3 of your last 4 comparable days.” The
   forecast can offer a small preparation choice—set out shoes, change into gym shorts,
-  select a short workout, or save a personal reminder or verse to revisit. These are
+  or select a short workout. These are
   ways to reduce friction or support a transition, not evidence that the person will
   exercise or that the prompt caused an outcome.
 - **BA forecast — anticipated craving / relief-seeking.** For example: “Yellow watch:
   strong evening cravings followed hard workouts on 3 of your last 4 comparable days.”
   It can invite the person to make what may be coming easier to meet: choose a
-  distraction or grounding activity, queue a verse or reminder, or prepare a
-  calligraphy or photo option (the simple-game idea is out of scope for v1 — see
-  §2.6). The offer stays optional and nonjudgmental;
+  grounding activity or prepare a calligraphy session (the v1 set is in
+  03 §4). The offer stays optional and nonjudgmental;
   it does not assume the coming sensation is a craving rather than hunger.
 
 Forecasts surface patterns from the person's own history rather than generic warnings,
@@ -197,20 +203,17 @@ the cap belongs to whatever reads it. Sketched in Lisp to make the separation co
   activities  ; this layer's activity set
   child)      ; another NODE, or NIL — nothing here stops it from going deep
 
+;; v1 set, per 03 §4
 (defparameter *ma-activities*
-  '(:aerobic      (running cycling walking)
-    :anaerobic    (strength-training hiit)
-    :meal-log     (photo-capture manual-entry)
+  '(:aerobic      (running cycling brisk-walk)
+    :anaerobic    (strength-training)            ; HIIT folds in as a hard session
+    :meal-log     (photo-capture)                ; tiers per 01 §10; no manual entry
     :exercise-prep (set-out-shoes change-into-gym-shorts
-                    choose-short-workout revisit-saved-reminder-or-verse)))
+                    choose-short-workout)))
 
 (defparameter *ba-activities*
   '(:name-emotion   (tag-feeling)
-    :record-context (time place person situational-awareness)
-    :distraction    (:ren-calligraphy (write "忍" :repeat n)
-                      :simple-game     (puzzle match-3)   ; out of scope for v1 — see below
-                      :photo-recall    (loved-ones-gallery)   ; placeholder
-                      :recite-verse    (user-saved-quotes))))
+    :distraction    (:ren-calligraphy (write "忍" :repeat n))))
 
 ;; SOW is the actual recursive generator: given a node, produce what it sows.
 ;; Nothing bounds how many times you can call this.
@@ -244,11 +247,12 @@ the cap belongs to whatever reads it. Sketched in Lisp to make the separation co
 
 > **Two notes on the activity lists above.**
 >
-> `:simple-game` is **out of scope for v1.** 02 §5 invariant 5 requires every plugin
-> manifest to be plain data that is never executed or interpreted as code, and a
-> puzzle or match-3 is code, not a manifest. It would need either a fourth
-> content-type renderer built into the app or the third-party-code security posture
-> that 02 §1 defers. The other three distraction techniques are data and ship in v1.
+> **Dropped (2026-09-25, 03 §4):** `:record-context` as an activity, manual meal
+> entry, revisiting a verse as exercise prep, and the `:simple-game`, `:photo-recall`
+> and `:recite-verse` distraction techniques. The game had already been ruled out for
+> v1, because 02 §5 invariant 5 requires every plugin manifest to be plain data and a
+> puzzle or match-3 is code. 03 §4 adds a further reason: match-3 is itself built on
+> a reward loop.
 >
 > `:name-emotion` is a **domain BA activity, not a plugin** — as listed here, and as
 > fixed in 02 §3.1. It is always available at a BA moment and cannot be installed or
@@ -287,6 +291,10 @@ craving is anticipated (via the forecast) or reported as active:
   "endure/patience") by hand, repeatedly. A tactile, slow, culturally-rooted delay
   technique; the physical act of writing occupies the hands and attention for the
   span a craving typically takes to crest and ease.
+> **v1 keeps only calligraphy (2026-09-25, 03 §4).** Reciting statements and photos of
+> loved ones, below, are dropped: the evidence for reciting is weak, and the direction
+> of the photos' effect is unknown. They stay here as the record of what was considered.
+
 - **Reciting self-reinforcing statements and quotes** — a personal, user-authored set
   of affirmations or quotes recited (aloud or silently) as a grounding anchor, rather
   than app-generated generic copy.
@@ -294,9 +302,9 @@ craving is anticipated (via the forecast) or reported as active:
   a picture-puzzle variant was floated as one alternative)* — a small, user-curated
   photo set surfaced as an emotional-grounding cue.
 
-All three share a shape: user-supplied content (not stock copy or stock imagery),
-low friction to start, and no implicit judgment about whether the person "should" be
-resisting anything.
+All three considered techniques share a shape: low friction to start, and no
+implicit judgment about whether the person "should" be resisting anything. The two
+dropped ones also relied on user-supplied content (not stock copy or stock imagery).
 
 ### 3.3 Design constraints
 
@@ -304,8 +312,9 @@ resisting anything.
   "don't give in" — an app organized around resisting every urge risks strengthening
   the very struggle it's meant to ease (see the "Fixes that Fail" / rebound risk in the
   design canvas above).
-- **User-curated, not prescribed.** The library's content (which quotes, which photos)
-  is supplied by the user, not authored by the app.
+- **User-curated, not prescribed.** Where a technique needs content, the user supplies
+  it; the app does not author it. (No v1 technique needs any: 忍 is the same character
+  for everyone.)
 - **Reversible, not diagnostic.** Using or skipping the toolkit is not logged as a
   success or failure state.
 - Where this eventually needs a home in the data model, `bebekim/empatheating`'s
@@ -320,12 +329,18 @@ resisting anything.
   session" was an `empatheating` concept with no analogue in this app. In ren-app the
   toolkit surfaces from the BA layer's selectables row (01 §8), and 02 §4's
   `GetGroundingOffer` guarantees the moment is never empty.
-- Is the photo/quote library authored ahead of time (a setup step) or built up
-  organically as the person uses the app?
+- ~~Is the photo/quote library authored ahead of time (a setup step) or built up
+  organically as the person uses the app?~~ Moot for v1: photos and quotes were
+  dropped (03 §4).
 - How do we tell, later, whether a grounding activity helped — without turning it
   into another thing to feel judged by?
 
 ### 3.5 Architecture direction: grounding techniques as installable plugins
+
+> **Note (2026-09-25).** This section was written for three techniques. v1 now has
+> one (忍, 03 §4), so the catalog launches with a single built-in plugin, and two of
+> the three planned renderers have nothing to render. Whether to keep them is open
+> in 02 §7.
 
 Rather than a fixed, hardcoded list of three techniques, the toolkit should be an
 **installable-plugin model**: a small catalog a person can browse and enable from,
@@ -389,8 +404,9 @@ or renders.
 ## 4. Status
 
 The product-level record, and no longer exploration-only: `01_main_ui.md` carries
-the UI decisions taken since, and `02_architecture.md` is the v1 Spec written
-against this doc. Sections refined or superseded by those two are marked inline.
+the UI decisions taken since, `02_architecture.md` is the v1 Spec written against
+this doc, and `03_stock_flow_model.md` carries the demand/capacity model and the v1
+activity set. Sections refined or superseded by those three are marked inline.
 
 This repo (`ren-app`) is the actual native iOS build target. The document originated
 in `bebekim/empatheating`, a Flask counseling app, which hosted only the brainstorm and
