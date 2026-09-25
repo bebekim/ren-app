@@ -1,0 +1,31 @@
+{
+  "plugins": [
+    {
+      "id": "ren-calligraphy",
+      "name": "Write 忍",
+      "summary": "Trace the character slowly, as many times as the urge takes to crest and ease.",
+      "systemImage": "pencil.and.scribble",
+      "contentType": "writingCanvas",
+      "estimatedMinutes": 3,
+      "manifest": { "character": "忍", "repeatCount": 10 }
+    },
+    {
+      "id": "recite-verse",
+      "name": "Recite",
+      "summary": "Your own statements and quotes, recited aloud or silently.",
+      "systemImage": "text.quote",
+      "contentType": "textPrompt",
+      "estimatedMinutes": 2,
+      "manifest": { "statements": [] }
+    },
+    {
+      "id": "photo-recall",
+      "name": "Photos",
+      "summary": "A small set of photos you choose.",
+      "systemImage": "photo.on.rectangle",
+      "contentType": "imageGallery",
+      "estimatedMinutes": 2,
+      "manifest": { "note": "Placeholder — the photo source is still an open question (PRD §3.2)." }
+    }
+  ]
+}

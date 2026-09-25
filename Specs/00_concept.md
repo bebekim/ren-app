@@ -1,13 +1,15 @@
-# PRD: Weight-Loss Feedback-Loop Companion
-*Version 0.1 (draft) - Created 2026-09-22*
+# 00 PRD: Weight-Loss Feedback-Loop Companion
+*Version 0.2 (draft) - Created 2026-09-22, updated 2026-09-25*
 
-> **Status**: early product exploration, migrated here from `bebekim/empatheating`
-> (where it originated as a brainstorm inside an unrelated Flask counseling-app
-> codebase, since that's where the session happened to be running). This captures
-> a brainstorm, not a committed roadmap. Nothing here has been broken into a Spec
-> yet — this repo doesn't have its own `Specs/README.md` convention set up yet;
-> `bebekim/empatheating`'s `Specs/README.md` documents the PRD-vs-Spec distinction
-> this doc borrows, if that's worth porting here too.
+> **Status**: the product-level record. Originally a brainstorm migrated from
+> `bebekim/empatheating` (where it started inside an unrelated Flask counseling-app
+> codebase, because that is where the session happened to be running).
+>
+> This doc is doc `00` in this repo's numbered `Specs/`. `01_main_ui.md` carries the
+> UI decisions and `02_architecture.md` is the v1 Spec written against this doc.
+> Several sections below have since been refined or superseded by those two; each
+> says so inline. Where they disagree with this doc, **the later-numbered doc
+> wins** and this one should be corrected to match.
 
 ## 1. Problem Statement
 
@@ -46,19 +48,23 @@ Shorthand used throughout the rest of this doc and the design canvas:
 
 - **MA (metabolic adaptation)** — the physical action set: aerobic and anaerobic
   exercise, meal logging (a photo-based, non-calorie-counting classifier is one
-  candidate approach — see the Jev/laya note in the design canvas). Maps to
-  "Energy regulation" above.
+  candidate approach — see the Jev/laya note in the design canvas), and low-friction
+  exercise preparation (for example, setting out shoes or changing into gym shorts).
+  Maps to "Energy regulation" above.
 - **BA (brain addiction)** — the craving-response set: naming the emotion/urge,
   and the grounding toolkit in section 3 (calligraphy, self-affirming statements,
   photos of loved ones). Maps to "Learned reward and relief" above.
 
-In the recursive-growth interface test (design canvas), **MA is the growing/dominant
-square** — doing MA (a workout, a logged meal) is what sows the craving seed — and
-**BA is the seed** that appears and grows inside it. This is the opposite of "more
-real estate = more important": MA gets more surface area because physical/metabolic
-tracking has more legitimate ongoing content; BA stays deliberately minimal because
-a craving intervention that takes real navigation to reach has already failed at
-being faster than the urge.
+In the recursive-growth interface test (design canvas), MA and BA are **interwoven,
+not permanently ranked**: an MA action (a workout or logged meal) may sow a BA craving
+seed, and a BA response in turn may reveal or sow the next MA layer. The recursive
+MA→BA→MA→BA structure in section 2.6 is the governing model — like the seed of the
+opposite state in a yin-yang symbol, or two strands of a double helix — rather than a
+one-way hierarchy. A given view may give its currently expanded MA layer more surface
+area because physical/metabolic tracking has more legitimate ongoing content at that
+moment; when BA is the active layer, the relationship reverses. This local size choice
+does not mean one feature matters more. BA controls must nevertheless remain reachable
+with less navigation than the urge takes to escalate.
 
 ## 2. Product Concept
 
@@ -70,15 +76,49 @@ meals, recovery) and the experiential view (hunger, urge, mood) are two lenses o
 app" and "counseling app" — switching lenses should preserve the event's place in time
 and its relationship to what came before and after.
 
-### 2.2 Anticipation over logging
+### 2.2 Anticipation over logging: a forecast for each layer
+
+> **Refined by 01 §2.** The semicircular arc below became the *top edge of each
+> layer* once the nest became rounded rectangles (01 §8) — same idea, different
+> geometry. The three neutral domain states live in 02 §3.4; the four rim
+> treatments and the rule mapping one onto the other are in 01 §2. The severity
+> vocabulary below ("yellow watch", "red wildfire") is UI-facing language only and
+> deliberately does not appear in the domain.
 
 The most useful moment is often *before* a familiar difficult window, not after food
-has been logged. A forecast surfaces a pattern from the person's own history
-("on 3 of the last 4 evenings after a hard workout, you reported strong hunger around
-9pm — does today feel similar?") rather than a generic warning. It explains and invites
-correction; it never frames the moment as an oncoming failure.
+has been logged. Each currently visible MA or BA layer can carry the same compact,
+semicircular weather-style forecast: a calm/clear state, a yellow watch, or a red
+wildfire-style warning. The arc communicates an anticipated condition, not a score,
+diagnosis, or prediction of failure; its accessible text must name the layer and the
+observed pattern behind it.
 
-### 2.3 Where the seed is sown (open design question — timing shift)
+- **MA forecast — low energy / exercise friction.** For example: “Yellow watch: low
+  energy has preceded skipped movement on 3 of your last 4 comparable days.” The
+  forecast can offer a small preparation choice—set out shoes, change into gym shorts,
+  select a short workout, or save a personal reminder or verse to revisit. These are
+  ways to reduce friction or support a transition, not evidence that the person will
+  exercise or that the prompt caused an outcome.
+- **BA forecast — anticipated craving / relief-seeking.** For example: “Yellow watch:
+  strong evening cravings followed hard workouts on 3 of your last 4 comparable days.”
+  It can invite the person to make what may be coming easier to meet: choose a
+  distraction or grounding activity, queue a verse or reminder, or prepare a
+  calligraphy or photo option (the simple-game idea is out of scope for v1 — see
+  §2.6). The offer stays optional and nonjudgmental;
+  it does not assume the coming sensation is a craving rather than hunger.
+
+Forecasts surface patterns from the person's own history rather than generic warnings,
+explain their basis, and invite correction (“does today feel similar?”). The visual
+severity must be calibrated to the available evidence and remain able to say “not
+enough history” rather than infer risk from a weak pattern. Testing must establish
+whether the warning metaphor helps preparation without creating alarm or undercutting
+a win; its presence alone does not establish that any suggested action helps.
+
+### 2.3 Where the seed is sown (resolved — see 01 §1)
+
+> **Resolved by 01 §1.** Both, split by channel: the seed appears *visually and
+> wordlessly* inside the MA layer at the moment of the win, so the achievement is
+> not undercut, and the forecast *speaks* later, near the anticipated window. The
+> open question below is kept for the reasoning that produced that answer.
 
 The taijitu (yin-yang symbol)'s dot — a seed of the opposite state already present at
 the peak of one state, like the summer solstice being the exact moment daylight starts
@@ -96,6 +136,11 @@ how it actually lands, not just design intuition.
 
 ### 2.4 Visual language exploration
 
+> **Superseded for layout by 01 §8**, which replaced the nested-boxes, "dive" and
+> side-rail drafts with the status / nest / selectables screen. The canvas link
+> below is kept as a record of the exploration; per §2.5 the canvas itself was
+> abandoned as a prototyping tool.
+
 Several concrete visual approaches for making the interlocked, delayed nature of these
 loops legible — a shared timeline with two interwoven strands, a lens-shifting slider
 between "what I did" and "what I experienced," a phone-scaled seesaw/tug-of-war for the
@@ -105,12 +150,12 @@ in a shared design canvas: https://claude.ai/artifact/NBq66bho1w6AQze3JhFcDJ
 
 ### 2.5 Interface test: findings so far
 
-A recursive-growth prototype (MA square grows and sows a BA seed inside it, per 2.3)
-was built and hand-tested in the design canvas above. The canvas tool itself proved
-too cumbersome to keep testing feel/interaction in — further hands-on iteration on
-this specific interaction is moving to a different prototyping setup. What came out
-of the exercise before that, as durable requirements rather than tool-specific
-output:
+A recursive-growth prototype (an active MA layer reveals a BA seed, which can in turn
+reveal the next MA layer, per 2.3 and 2.6) was built and hand-tested in the design
+canvas above. The canvas tool itself proved too cumbersome to keep testing
+feel/interaction in — further hands-on iteration on this specific interaction is
+moving to a different prototyping setup. What came out of the exercise before that,
+as durable requirements rather than tool-specific output:
 
 - **Cap nesting at 3 layers, not 4.** An early version showed a third, smaller seed
   forming inside the BA seed once it grew (recursion continuing indefinitely).
@@ -120,16 +165,22 @@ output:
   visually convincing as "suspended" at phone scale — it needs an unambiguous cue
   (e.g. a soft shadow under it) so "not touching either edge" is legible at a glance,
   not something you have to measure to notice.
-- **Each layer needs room for ~3 quick-access actions**, matching the ~3 candidate
-  techniques planned for both MA and BA. This is in tension with touch-target
-  minimums (~44pt) at the BA seed's small size — the seed's maximum size needs to be
-  large enough to host 3 real tappable targets, even though it should stay visibly
-  smaller than the MA square.
-- **A layer too small for its 3 actions needs a preview state, not empty space or a
-  generic loader.** The working idea: 3 small rising indicators (one per pending
-  action, in the same positions the real buttons will occupy once the layer is big
-  enough) so the preview and the eventual controls read as continuous, not a
-  swapped-out scene.
+  *Partly superseded by 01 §8:* with the nest anchored at a bottom corner, the boxes
+  **share that corner** and float clear on their other two edges, keeping the shadow
+  cue. Floating is preserved where it carries meaning; the corner is shared where
+  thumb reach and the turnover animation need it.
+- ~~**Each layer needs room for ~3 quick-access actions**~~ — **superseded by
+  01 §8.** The finding was that ~3 actions per layer collides with the ~44pt
+  touch-target minimum once a layer is the nested seed: on the SE-class floor the
+  core box is about 114pt across, and three 44pt targets plus spacing need ~132pt.
+  01 §8 resolves it by moving the actions **out of the boxes** into a selectables
+  row at the bottom of the screen. Tapping a box only *selects* it, and a 114pt
+  target is comfortable for that. What survives is the underlying rule: neither
+  mode is permanently the larger one.
+- ~~**A layer too small for its 3 actions needs a preview state**~~ — **superseded
+  by 01 §8** for the same reason. The 3 rising indicators existed to stand in for
+  buttons a small layer could not host; with no buttons inside any box, there is
+  nothing to preview. (Worth keeping in mind if a box ever hosts controls again.)
 
 ### 2.6 Data model: recursive and unbounded; display: capped at 3
 
@@ -147,15 +198,17 @@ the cap belongs to whatever reads it. Sketched in Lisp to make the separation co
   child)      ; another NODE, or NIL — nothing here stops it from going deep
 
 (defparameter *ma-activities*
-  '(:aerobic    (running cycling walking)
-    :anaerobic  (strength-training hiit)
-    :meal-log   (photo-capture manual-entry)))
+  '(:aerobic      (running cycling walking)
+    :anaerobic    (strength-training hiit)
+    :meal-log     (photo-capture manual-entry)
+    :exercise-prep (set-out-shoes change-into-gym-shorts
+                    choose-short-workout revisit-saved-reminder-or-verse)))
 
 (defparameter *ba-activities*
   '(:name-emotion   (tag-feeling)
     :record-context (time place person situational-awareness)
     :distraction    (:ren-calligraphy (write "忍" :repeat n)
-                      :simple-game     (puzzle match-3)
+                      :simple-game     (puzzle match-3)   ; out of scope for v1 — see below
                       :photo-recall    (loved-ones-gallery)   ; placeholder
                       :recite-verse    (user-saved-quotes))))
 
@@ -188,6 +241,19 @@ the cap belongs to whatever reads it. Sketched in Lisp to make the separation co
 ;; (MA <activities> (BA <activities> (MA <activities> nil)))
 ;; — three real layers; everything deeper exists in *history* but render never touches it
 ```
+
+> **Two notes on the activity lists above.**
+>
+> `:simple-game` is **out of scope for v1.** 02 §5 invariant 5 requires every plugin
+> manifest to be plain data that is never executed or interpreted as code, and a
+> puzzle or match-3 is code, not a manifest. It would need either a fourth
+> content-type renderer built into the app or the third-party-code security posture
+> that 02 §1 defers. The other three distraction techniques are data and ship in v1.
+>
+> `:name-emotion` is a **domain BA activity, not a plugin** — as listed here, and as
+> fixed in 02 §3.1. It is always available at a BA moment and cannot be installed or
+> uninstalled, so it can never be missing. Only the `:distraction` techniques are
+> plugins. (01 §6 briefly listed it as a plugin; that was wrong and is corrected.)
 
 Deliberate choice: the depth cutoff in `render` returns `nil`, not a `:truncated` marker
 or a "more coming" stub — 2.5's feedback was that even a *hint* of a next layer forming
@@ -250,8 +316,10 @@ resisting anything.
 
 ### 3.4 Open questions
 
-- Does the toolkit surface inside a counseling session, as a standalone moment
-  outside any session, or both?
+- ~~Does the toolkit surface inside a counseling session?~~ Dropped: "counseling
+  session" was an `empatheating` concept with no analogue in this app. In ren-app the
+  toolkit surfaces from the BA layer's selectables row (01 §8), and 02 §4's
+  `GetGroundingOffer` guarantees the moment is never empty.
 - Is the photo/quote library authored ahead of time (a setup step) or built up
   organically as the person uses the app?
 - How do we tell, later, whether a grounding activity helped — without turning it
@@ -276,7 +344,8 @@ class names and file paths below should not.
 
 **Domain-equivalent concepts**:
 - A `GroundingPlugin` entity — id, name, description, content type (an enum:
-  text prompt, image gallery, writing canvas, audio, external link), estimated
+  text prompt, image gallery, writing canvas, audio, external link — **v1 ships
+  only the first three; see 02 §3.3**), estimated
   duration, and a manifest — the plugin's actual content (quotes, the character to
   write, a photo-source reference) kept as plain data, not code.
 - A plugin-repository abstraction: list available, get one, list a user's installed
@@ -319,7 +388,9 @@ or renders.
 
 ## 4. Status
 
-Exploration only. No Spec has been written against this PRD yet.
+The product-level record, and no longer exploration-only: `01_main_ui.md` carries
+the UI decisions taken since, and `02_architecture.md` is the v1 Spec written
+against this doc. Sections refined or superseded by those two are marked inline.
 
 This repo (`ren-app`) is the actual native iOS build target. The document originated
 in `bebekim/empatheating`, a Flask counseling app, which hosted only the brainstorm and

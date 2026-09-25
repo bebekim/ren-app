@@ -1,0 +1,39 @@
+name: ren-app
+options:
+  bundleIdPrefix: com.individual.ren
+targets:
+  Ren:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Ren
+    settings:
+      INFOPLIST_FILE: Ren/Info.plist
+      PRODUCT_BUNDLE_IDENTIFIER: com.individual.ren
+      DEVELOPMENT_TEAM: FAD889UN6M
+      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+      SWIFT_VERSION: "5.9"
+  RenTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: RenTests
+    dependencies:
+      - target: Ren
+    settings:
+      GENERATE_INFOPLIST_FILE: YES
+      DEVELOPMENT_TEAM: FAD889UN6M
+      IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+      SWIFT_VERSION: "5.9"
+schemes:
+  Ren:
+    build:
+      targets:
+        Ren: all
+        RenTests: [test]
+    test:
+      targets:
+        - RenTests
