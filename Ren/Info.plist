@@ -27,16 +27,11 @@
 	</dict>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<!-- 02 §8: iPhone only, portrait only. The iPad orientations that used to be here
+	     promised a layout that does not exist. -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>

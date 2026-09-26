@@ -1,0 +1,6 @@
+{
+  "nest": {
+    "layerAreaRatios": [9, 4, 1],
+    "floatingGapRatio": 0.05
+  }
+}
